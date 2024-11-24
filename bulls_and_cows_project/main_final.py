@@ -4,8 +4,16 @@ import random
 
 # Основной класс игры "Быки и коровы"
 class BullsAndCowsGame:
+    """
+    Класс для реализации игры "Быки и коровы". Управляет логикой игры, интерфейсом
+    и обработкой взаимодействия пользователя с приложением.
+    """
     def __init__(self, root):
-        # Инициализация главного окна и базовых переменных
+        """
+        Инициализация игры, создание основного окна и базовых переменных.
+
+        :param root: Главное окно tkinter.
+        """
         self.root = root
         self.root.title("Игра: Быки и Коровы")
 
@@ -15,6 +23,9 @@ class BullsAndCowsGame:
         self.create_widgets()  # Создание интерфейса
 
     def create_widgets(self):
+        """
+        Создает элементы интерфейса для взаимодействия с пользователем.
+        """
         # Интерфейс для ввода длины числа
         tk.Label(self.root, text="Введите количество символов:").pack(pady=5)
         self.length_entry = tk.Entry(self.root, width=4)
@@ -47,7 +58,10 @@ class BullsAndCowsGame:
         self.attempt_entry.focus()
 
     def start_game(self):
-        # Логика запуска новой игры
+        """
+        Запускает новую игру: генерирует загаданное число, сбрасывает предыдущие попытки
+        и обновляет интерфейс.
+        """
         try:
             length = int(self.length_entry.get())  # Получение длины числа
             if self.base_var.get() == "10":
@@ -75,7 +89,11 @@ class BullsAndCowsGame:
             messagebox.showerror("Ошибка", "Пожалуйста, введите корректное количество символов!")
 
     def play(self, event):
-        # Логика обработки попыток пользователя
+        """
+        Обрабатывает попытку пользователя угадать загаданное число.
+
+        :param event: Событие нажатия клавиши (Enter).
+        """
         attempt = self.attempt_entry.get().lower()  # Приведение попытки к нижнему регистру
         if attempt == "я сдаюсь":
             # Если пользователь сдается, показать загаданное число
@@ -104,13 +122,20 @@ class BullsAndCowsGame:
         self.attempt_entry.delete(0, tk.END)  # Очистка поля ввода
 
     def calculate_score(self, attempt):
-        # Подсчет количества быков и коров
+        """
+        Подсчитывает количество "быков" и "коров" для текущей попытки.
+
+        :param attempt: Строка с текущей попыткой пользователя.
+        :return: Кортеж (число быков, число коров).
+        """
         bulls = sum(a == b for a, b in zip(attempt, self.secret_number))  # Быки: совпадение позиции и символа
         cows = sum(min(attempt.count(x), self.secret_number.count(x)) for x in set(attempt)) - bulls  # Коровы: совпадение символов без учета позиции
         return bulls, cows
 
     def update_attempts_display(self):
-        # Обновление отображения истории попыток
+        """
+        Обновляет отображение списка предыдущих попыток в текстовом поле.
+        """
         self.attempts_display.config(state='normal')
         self.attempts_display.delete('1.0', tk.END)
         for attempt, bulls, cows in self.attempts:
